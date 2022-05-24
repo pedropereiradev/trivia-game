@@ -6,7 +6,9 @@ class Game extends Component {
     return (
       <div>
         <Header />
-        Game</div>
+        Game
+
+      </div>
     );
   }
 }
