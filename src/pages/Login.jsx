@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { fetchAPIPlayer } from '../redux/actions';
 
 class Login extends Component {
   constructor() {
@@ -21,6 +24,11 @@ class Login extends Component {
     });
   }
 
+  componentDidMount = () => {
+    fetchAPIPlayer();
+    // console.log(fetchAPIPlayer);
+  }
+
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({
@@ -29,7 +37,14 @@ class Login extends Component {
   }
 
   handleClick = (event) => {
+    const { history, getFetchAPI } = this.props;
     event.preventDefault();
+
+    getFetchAPI();
+
+    console.log(getFetchAPI);
+
+    history.push('/game');
   }
 
   render() {
@@ -65,4 +80,17 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  getFetchAPI: PropTypes.func.isRequired,
+  history: PropTypes.objectOf(PropTypes.shape).isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  token: state.token,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getFetchAPI: () => dispatch(fetchAPIPlayer()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
