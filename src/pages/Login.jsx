@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { fetchAPIPlayer } from '../redux/actions';
+import { fetchAPIPlayer, saveUserEmail, saveUserName } from '../redux/actions';
 
 class Login extends Component {
   constructor() {
@@ -44,6 +44,12 @@ class Login extends Component {
     getFetchAPI();
 
     console.log(getFetchAPI);
+
+    const { email, name } = this.state;
+    const { setUserEmail, setUserName } = this.props;
+
+    setUserName(name);
+    setUserEmail(email);
 
     history.push('/game');
   }
@@ -94,6 +100,8 @@ class Login extends Component {
 
 Login.propTypes = {
   getFetchAPI: PropTypes.func.isRequired,
+  setUserEmail: PropTypes.func.isRequired,
+  setUserName: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
 };
 
@@ -103,6 +111,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getFetchAPI: () => dispatch(fetchAPIPlayer()),
+  setUserEmail: (email) => dispatch(saveUserEmail(email)),
+  setUserName: (name) => dispatch(saveUserName(name)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
