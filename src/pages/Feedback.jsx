@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 
 class Feedback extends Component {
   render() {
-    const MIN_SCORE = 3;
-    const { score } = this.props;
+    const MIN_ASSERTIONS = 3;
+    const { assertions } = this.props;
 
     return (
       <div>
         {/* Header */}
 
         <h2 data-testid="feedback-text">
-          {score > MIN_SCORE ? 'Well Done!' : 'Could be better...'}
+          {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}
         </h2>
       </div>
     );
@@ -20,11 +20,11 @@ class Feedback extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  score: state.playerReducer.score,
+  assertions: state.playerReducer.assertions,
 });
 
 Feedback.propTypes = {
-  score: PropTypes.number.isRequired,
+  assertions: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps)(Feedback);
