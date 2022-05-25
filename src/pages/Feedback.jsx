@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 
 class Feedback extends Component {
   render() {
-    const { assertions, score } = this.props;
+    const { assertions, score, history } = this.props;
     const MIN_ASSERTIONS = 3;
 
     return (
       <div>
-        {/* Header */}      
+        {/* Header */}
         <h2 data-testid="feedback-text">
           {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}
         </h2>
@@ -32,6 +32,15 @@ class Feedback extends Component {
             {score === 1 ? 'ponto' : 'pontos'}
           </p>
         </section>
+        <section>
+          <button
+            type="button"
+            onClick={ () => history.push('/ranking') }
+            data-testid="btn-ranking"
+          >
+            Ranking
+          </button>
+        </section>
       </div>
     );
   }
@@ -45,6 +54,7 @@ const mapStateToProps = (state) => ({
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
+  history: PropTypes.objectOf(PropTypes.shape).isRequired,
 };
 
 export default connect(mapStateToProps)(Feedback);
