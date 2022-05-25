@@ -32,7 +32,6 @@ class Feedback extends Component {
             {score === 1 ? 'ponto' : 'pontos'}
           </p>
         </section>
-
         <section>
           <button
             type="button"
@@ -40,6 +39,13 @@ class Feedback extends Component {
             onClick={ () => history.push('/') }
           >
             Play Again
+          </button>
+          <button
+            type="button"
+            onClick={ () => history.push('/ranking') }
+            data-testid="btn-ranking"
+          >
+            Ranking
           </button>
         </section>
       </div>
