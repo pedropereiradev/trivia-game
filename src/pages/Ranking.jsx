@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Ranking extends Component {
   render() {
-    return <h1 data-testid="ranking-title">Ranking</h1>;
+    const { history } = this.props;
+    return (
+      <div>
+        <h1 data-testid="ranking-title">Ranking</h1>
+        <button
+          type="button"
+          onClick={ () => history.push('/') }
+          data-testid="btn-go-home"
+        >
+          Jogar novamente
+        </button>
+      </div>
+    );
   }
 }
+
+Ranking.propTypes = {
+  history: PropTypes.objectOf(PropTypes.shape).isRequired,
+};
 
 export default Ranking;
