@@ -25,11 +25,6 @@ class Login extends Component {
     });
   }
 
-  componentDidMount = () => {
-    fetchAPIPlayer();
-    // console.log(fetchAPIPlayer);
-  }
-
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({
@@ -42,8 +37,6 @@ class Login extends Component {
     event.preventDefault();
 
     getFetchAPI();
-
-    console.log(getFetchAPI);
 
     const { email, name } = this.state;
     const { setUserEmail, setUserName } = this.props;
