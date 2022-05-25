@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { findByTestId, findByText, screen } from '@testing-library/react';
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
@@ -20,10 +20,10 @@ describe('Login page test', () => {
     expect(buttonSettings).toBeInTheDocument();  
   });
 
-  test('Verify if play button redirect to game page', () => {
-    const { history } =  renderWithRouterAndRedux(<App />);
+  test('Verify if play button redirect to game page', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
 
-    const buttonPlay = screen.getByTestId(/btn-play/i); 
+    const buttonPlay = screen.getByTestId('btn-play'); 
     expect(buttonPlay).toBeInTheDocument();
 
     const inputName = screen.getByTestId('input-player-name');
@@ -34,9 +34,12 @@ describe('Login page test', () => {
     userEvent.type(inputName, 'Geovana');
     userEvent.type(inputEmail, 'teste@trybe.com');
 
-    userEvent.click(buttonPlay);
-    history.push('/game');
+    expect(inputName).toHaveValue('Geovana');
+    expect(inputEmail).toHaveValue('teste@trybe.com');
 
+    userEvent.click(buttonPlay);
+    const img = await screen.findByAltText('off symbol');
+    await expect(img).toBeInTheDocument();
   });
 
   test('Verify if settings button redirect to settings page', () => {
