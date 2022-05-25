@@ -5,10 +5,15 @@ import { connect } from 'react-redux';
 class Feedback extends Component {
   render() {
     const { assertions, score } = this.props;
+    const MIN_ASSERTIONS = 3;
 
     return (
       <div>
-        {/* Header */}
+        {/* Header */}      
+        <h2 data-testid="feedback-text">
+          {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}
+        </h2>
+
         <section>
           <p>
             Você acertou
