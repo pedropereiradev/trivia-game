@@ -85,7 +85,7 @@ describe('Login page test', () => {
          
    });
 
-   test('Verify if validation is working - just inputEmail right', () => {
+   test('Verify if validation is working - both wrong', () => {
     renderWithRouterAndRedux(<App />);
  
     const inputName = screen.getByTestId('input-player-name');
@@ -107,7 +107,7 @@ describe('Login page test', () => {
          
    });
 
-   test('Verify if validation is working - both wrong', () => {
+   test('Verify if validation is working - just inputEmail rigth', () => {
     renderWithRouterAndRedux(<App />);
  
     const inputName = screen.getByTestId('input-player-name');
@@ -120,8 +120,8 @@ describe('Login page test', () => {
 
      expect(buttonPlay).toBeDisabled();
 
-     userEvent.type(inputName, 'Geovana');
-     userEvent.type(inputEmail, 'teste@trybe');
+     userEvent.type(inputName, '');
+     userEvent.type(inputEmail, 'teste@trybe.com');
  
      expect(buttonPlay).toBeDisabled();      
          

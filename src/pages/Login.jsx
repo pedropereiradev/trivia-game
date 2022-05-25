@@ -32,11 +32,11 @@ class Login extends Component {
     }, () => this.validate());
   }
 
-  handleClick = (event) => {
+  handleClick = async (event) => {
     const { history, getFetchAPI } = this.props;
     event.preventDefault();
 
-    getFetchAPI();
+    await getFetchAPI();
 
     const { email, name } = this.state;
     const { setUserEmail, setUserName } = this.props;
