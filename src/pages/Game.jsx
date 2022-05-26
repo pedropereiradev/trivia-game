@@ -58,8 +58,6 @@ class Game extends Component {
     }
   }
 
-  // Pendente: resetar a borda ao mudar pra próxima questão
-
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
       isAnswerd } = this.state;
