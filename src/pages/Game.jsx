@@ -8,6 +8,9 @@ class Game extends Component {
     this.state = {
       getQuestions: [],
       position: 0,
+      correctBorder: '',
+      incorrectBorder: '',
+      isAnswered: false,
     };
   }
 
@@ -32,17 +35,32 @@ class Game extends Component {
     }
   }
 
-  handleClick = () => {
+  handleClickNext = () => {
     const { getQuestions } = this.state;
     if (getQuestions.length > 0) {
       this.setState((previousState) => ({
         position: previousState.position + 1,
+        correctBorder: '',
+        incorrectBorder: '',
       }));
     }
   }
 
+  handleClickOption = () => {
+    // console.log('works');
+    const { getQuestions } = this.state;
+    if (getQuestions.length > 0) {
+      this.setState({
+        correctBorder: '3px solid rgb(6, 240, 15)',
+        incorrectBorder: '3px solid red',
+        isAnswered: true,
+      });
+    }
+  }
+
   render() {
-    const { getQuestions, position } = this.state;
+    const { getQuestions, position, correctBorder, incorrectBorder,
+      isAnswered } = this.state;
 
     console.log(getQuestions);
 
@@ -52,6 +70,8 @@ class Game extends Component {
       <button
         type="button"
         data-testid="correct-answer"
+        onClick={ this.handleClickOption }
+        style={ { border: correctBorder } }
       >
         {getQuestions.length > 0
         && getQuestions[position].correct_answer}
@@ -65,6 +85,8 @@ class Game extends Component {
                   key={ index }
                   type="button"
                   data-testid={ `wrong-answer-${index}` }
+                  onClick={ this.handleClickOption }
+                  style={ { border: incorrectBorder } }
                 >
                   {incorrects}
                 </button>
@@ -97,12 +119,18 @@ class Game extends Component {
           && random.map((allOptions) => (allOptions))}
         </p>
 
-        <button
-          type="button"
-          onClick={ this.handleClick }
-        >
-          Next Question
-        </button>
+        {isAnswered
+        && (
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.handleClickNext }
+          >
+            Next
+          </button>
+        )}
+
+        {/* Pendente: lógica para ao chegar na última pergunta, voltar na primeira */}
 
       </div>
     );
