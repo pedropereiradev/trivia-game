@@ -10,7 +10,7 @@ class Game extends Component {
       position: 0,
       correctBorder: '',
       incorrectBorder: '',
-      isAnswerd: false,
+      isAnswered: false,
     };
   }
 
@@ -53,14 +53,14 @@ class Game extends Component {
       this.setState({
         correctBorder: '3px solid rgb(6, 240, 15)',
         incorrectBorder: '3px solid red',
-        isAnswerd: true,
+        isAnswered: true,
       });
     }
   }
 
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
-      isAnswerd } = this.state;
+      isAnswered } = this.state;
 
     console.log(getQuestions);
 
@@ -119,7 +119,7 @@ class Game extends Component {
           && random.map((allOptions) => (allOptions))}
         </p>
 
-        {isAnswerd
+        {isAnswered
         && (
           <button
             type="button"
