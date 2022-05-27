@@ -20,5 +20,4 @@ describe('Feedback page test', () => {
     userEvent.click(buttonRanking);
     history.push('/ranking');
   });
-
 });
