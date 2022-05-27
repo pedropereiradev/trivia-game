@@ -5,35 +5,34 @@ import Header from './Header';
 
 class Feedback extends Component {
   render() {
-    const { history } = this.props;
-    // const MIN_ASSERTIONS = 3;
+    const { history, assertions, score } = this.props;
+    const MIN_ASSERTIONS = 3;
 
     return (
       <div>
         <Header />
         <h2 data-testid="feedback-text">
-          teste
-          {/* {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}  */}
+          {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}
         </h2>
 
-        {/* <section> */}
-        {/* <p> */}
-        {/* Você acertou */}
-        {/* {' '}
+        <section>
+          <p>
+            Você acertou
+            {' '}
             <span data-testid="feedback-total-question">{ assertions }</span>
             {' '}
             {assertions === 1 ? 'questão' : 'questões'}
-            {' '} */}
-        {/* ! */}
-        {/* </p>
+            {' '}
+            !
+          </p>
           <p>
             Um total de
             {' '}
             <span data-testid="feedback-total-score">{score}</span>
             {' '}
-            {score === 1 ? 'ponto' : 'pontos'} */}
-        {/* </p> */}
-        {/* </section> */}
+            {score === 1 ? 'ponto' : 'pontos'}
+          </p>
+        </section>
         <section>
           <button
             type="button"
@@ -61,8 +60,8 @@ const mapStateToProps = (state) => ({
 });
 
 Feedback.propTypes = {
-  // assertions: PropTypes.number.isRequired,
-  // score: PropTypes.number.isRequired,
+  assertions: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
 };
 

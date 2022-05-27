@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './Header';
-import { saveScore } from '../redux/actions';
+import { getAssertions, saveScore } from '../redux/actions';
 
 class Game extends Component {
   constructor() {
@@ -16,6 +16,7 @@ class Game extends Component {
       counter: 30,
       isDisabled: false,
       score: 0,
+      assertions: 0,
     };
   }
 
@@ -108,8 +109,14 @@ class Game extends Component {
       // console.log(getDifficulty);
       const TEN = 10;
       const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
-      this.setState({
+      this.setState(({ assertions }) => ({
         score: totalScore,
+        assertions: assertions + 1,
+      }), () => {
+        const { assertions } = this.state;
+        const { setAssertions } = this.props;
+
+        setAssertions(assertions);
       });
       // console.log(totalScore);
 
@@ -218,10 +225,12 @@ class Game extends Component {
 Game.propTypes = {
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
   setUserScore: PropTypes.func.isRequired,
+  setAssertions: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   setUserScore: (score) => dispatch(saveScore(score)),
+  setAssertions: (assertions) => dispatch(getAssertions(assertions)),
 });
 
 export default connect(null, mapDispatchToProps)(Game);
