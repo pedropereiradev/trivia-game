@@ -35,17 +35,18 @@ class Game extends Component {
     if (questions.length > 0) {
       this.setState({
         getQuestions: questions,
-      } () => {
-          const { getQuestions } = this.state;
-          const NUMBER_SHUFFLED = 0.5;
-          
-          getQuestions.map((questionObj) => (
-            this.setState((prevState) => ({
-              shuffledArray: [...prevState.shuffledArray, [questionObj
-                .correct_answer, ...questionObj.incorrect_answers]
-                .sort(() => Math.random() - NUMBER_SHUFFLED)],
-              rightAnswer: [...prevState.rightAnswer, questionObj.correct_answer],
-            });
+      }, () => {
+        const { getQuestions } = this.state;
+        const NUMBER_SHUFFLED = 0.5;
+
+        getQuestions.map((questionObj) => (
+          this.setState((prevState) => ({
+            shuffledArray: [...prevState.shuffledArray, [questionObj
+              .correct_answer, ...questionObj.incorrect_answers]
+              .sort(() => Math.random() - NUMBER_SHUFFLED)],
+            rightAnswer: [...prevState.rightAnswer, questionObj.correct_answer],
+          }))));
+      });
     } else {
       history.push('/');
       saveToken();
@@ -93,90 +94,86 @@ class Game extends Component {
     }
   }
 
-  handleClickOption = () => {
-    const { getQuestions, shuffledArray } = this.state;
-    console.log(shuffledArray[0]);
+      multDifficulty = (getDifficulty) => {
+        const ONE = 1;
+        const TWO = 2;
+        const THREE = 3;
+        if (getDifficulty === 'easy') {
+          return ONE;
+        }
+        if (getDifficulty === 'hard') {
+          return THREE;
+        } if (getDifficulty === 'medium') {
+          return TWO;
+        }
+      };
 
-  multDifficulty = (getDifficulty) => {
-    const ONE = 1;
-    const TWO = 2;
-    const THREE = 3;
-    if (getDifficulty === 'easy') {
-      return ONE;
-    }
-    if (getDifficulty === 'hard') {
-      return TWO;
-    } if (getDifficulty === 'medium') {
-      return THREE;
-    }
-  }
+    handleClickOption = ({ target }) => {
+      this.stopTimer();
+      const { getQuestions, counter, score } = this.state;
+      const question = target.innerHTML;
+      const findQuestion = getQuestions
+        .find((quest) => quest.correct_answer === question);
+      if (findQuestion !== undefined) {
+        const getDifficulty = findQuestion.difficulty;
+        // console.log(getDifficulty);
+        const TEN = 10;
+        const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
+        this.setState(({ assertions }) => ({
+          score: totalScore,
+          assertions: assertions + 1,
+        }), () => {
+          const { assertions } = this.state;
+          const { setAssertions } = this.props;
 
-  handleClickOption = ({ target }) => {
-    this.stopTimer();
-    const { getQuestions, counter, score } = this.state;
-    const question = target.innerHTML;
-    // console.log(question);
-    const findQuestion = getQuestions.find((quest) => quest.correct_answer === question);
-    if (findQuestion !== undefined) {
-      const getDifficulty = findQuestion.difficulty;
-      // console.log(getDifficulty);
-      const TEN = 10;
-      const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
-      this.setState(({ assertions }) => ({
-        score: totalScore,
-        assertions: assertions + 1,
-      }), () => {
-        const { assertions } = this.state;
-        const { setAssertions } = this.props;
+          setAssertions(assertions);
+        });
+        // console.log(totalScore);
 
-        setAssertions(assertions);
-      });
-      // console.log(totalScore);
+        const { setUserScore } = this.props;
+        setUserScore(totalScore);
+      }
 
-      const { setUserScore } = this.props;
-      setUserScore(totalScore);
-    }
+      if (getQuestions.length > 0) {
+        this.setState({
+          correctBorder: '3px solid rgb(6, 240, 15)',
+          incorrectBorder: '3px solid red',
+          isAnswered: true,
+        });
+      }
+    };
 
-    if (getQuestions.length > 0) {
-      this.setState({
-        correctBorder: '3px solid rgb(6, 240, 15)',
-        incorrectBorder: '3px solid red',
-        isAnswered: true,
-      });
-    }
-  }
+    render() {
+      const { getQuestions, position, correctBorder, incorrectBorder,
+        isAnswered, counter, isDisabled, rightAnswer, shuffledArray } = this.state;
 
-  render() {
-    const { getQuestions, position, correctBorder, incorrectBorder,
-      isAnswered, counter, isDisabled, rightAnswer, shuffledArray } = this.state;
+      // console.log(getQuestions);
+      // console.log(position);
 
-    // console.log(getQuestions);
-    // console.log(position);
+      if (counter < 0) {
+        this.setState({
+          counter: 0,
+          isDisabled: true,
+        });
+      }
 
-    if (counter < 0) {
-      this.setState({
-        counter: 0,
-        isDisabled: true,
-      });
-    }
+      return (
+        <div>
+          <Header />
+          <p>{counter}</p>
 
-    return (
-      <div>
-        <Header />
-        <p>{counter}</p>
-
-        <p data-testid="question-category">
-          {getQuestions.length > 0
+          <p data-testid="question-category">
+            {getQuestions.length > 0
           && getQuestions[position].category}
-        </p>
+          </p>
 
-        <p data-testid="question-text">
-          {getQuestions.length > 0
+          <p data-testid="question-text">
+            {getQuestions.length > 0
           && getQuestions[position].question}
-        </p>
+          </p>
 
-        <section data-testid="answer-options">
-          {shuffledArray.length > 0
+          <section data-testid="answer-options">
+            {shuffledArray.length > 0
               && shuffledArray[position].map((questions, index) => (
                 <button
                   key={ index }
@@ -191,9 +188,9 @@ class Game extends Component {
                   {questions}
                 </button>
               ))}
-        </section>
+          </section>
 
-        {isAnswered
+          {isAnswered
         && (
           <button
             type="button"
@@ -204,11 +201,11 @@ class Game extends Component {
           </button>
         )}
 
-        {/* Pendente: lógica para ao chegar na última pergunta, voltar na primeira */}
+          {/* Pendente: lógica para ao chegar na última pergunta, voltar na primeira */}
 
-      </div>
-    );
-  }
+        </div>
+      );
+    }
 }
 
 Game.propTypes = {
