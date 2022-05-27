@@ -17,15 +17,17 @@ class Game extends Component {
       isAnswered: false,
       counter: 30,
       isDisabled: false,
+      rightAnswer: [],
+      shuffledArray: [],
       score: 0,
       assertions: 0,
+
     };
   }
 
   componentDidMount = async () => {
     const { counter } = this.state;
     const { history } = this.props;
-
     const token = getToken();
 
     const questions = await fetchApiGame(token);
@@ -33,6 +35,17 @@ class Game extends Component {
     if (questions.length > 0) {
       this.setState({
         getQuestions: questions,
+      }, () => {
+        const { getQuestions } = this.state;
+        const NUMBER_SHUFFLED = 0.5;
+
+        getQuestions.map((questionObj) => (
+          this.setState((prevState) => ({
+            shuffledArray: [...prevState.shuffledArray, [questionObj
+              .correct_answer, ...questionObj.incorrect_answers]
+              .sort(() => Math.random() - NUMBER_SHUFFLED)],
+            rightAnswer: [...prevState.rightAnswer, questionObj.correct_answer],
+          }))));
       });
     } else {
       history.push('/');
@@ -81,127 +94,103 @@ class Game extends Component {
     }
   }
 
-  multDifficulty = (getDifficulty) => {
-    const ONE = 1;
-    const TWO = 2;
-    const THREE = 3;
-    if (getDifficulty === 'easy') {
-      return ONE;
-    }
-    if (getDifficulty === 'hard') {
-      return TWO;
-    } if (getDifficulty === 'medium') {
-      return THREE;
-    }
-  }
+      multDifficulty = (getDifficulty) => {
+        const ONE = 1;
+        const TWO = 2;
+        const THREE = 3;
+        if (getDifficulty === 'easy') {
+          return ONE;
+        }
+        if (getDifficulty === 'hard') {
+          return THREE;
+        } if (getDifficulty === 'medium') {
+          return TWO;
+        }
+      };
 
-  handleClickOption = ({ target }) => {
-    this.stopTimer();
-    const { getQuestions, counter, score } = this.state;
-    const question = target.innerHTML;
-    // console.log(question);
-    const findQuestion = getQuestions.find((quest) => quest.correct_answer === question);
-    if (findQuestion !== undefined) {
-      const getDifficulty = findQuestion.difficulty;
-      // console.log(getDifficulty);
-      const TEN = 10;
-      const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
-      this.setState(({ assertions }) => ({
-        score: totalScore,
-        assertions: assertions + 1,
-      }), () => {
-        const { assertions } = this.state;
-        const { setAssertions } = this.props;
+    handleClickOption = ({ target }) => {
+      this.stopTimer();
+      const { getQuestions, counter, score } = this.state;
+      const question = target.innerHTML;
+      const findQuestion = getQuestions
+        .find((quest) => quest.correct_answer === question);
+      if (findQuestion !== undefined) {
+        const getDifficulty = findQuestion.difficulty;
+        // console.log(getDifficulty);
+        const TEN = 10;
+        const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
+        this.setState(({ assertions }) => ({
+          score: totalScore,
+          assertions: assertions + 1,
+        }), () => {
+          const { assertions } = this.state;
+          const { setAssertions } = this.props;
 
-        setAssertions(assertions);
-      });
-      // console.log(totalScore);
+          setAssertions(assertions);
+        });
+        // console.log(totalScore);
 
-      const { setUserScore } = this.props;
-      setUserScore(totalScore);
-    }
+        const { setUserScore } = this.props;
+        setUserScore(totalScore);
+      }
 
-    if (getQuestions.length > 0) {
-      this.setState({
-        correctBorder: '3px solid rgb(6, 240, 15)',
-        incorrectBorder: '3px solid red',
-        isAnswered: true,
-      });
-    }
-  }
+      if (getQuestions.length > 0) {
+        this.setState({
+          correctBorder: '3px solid rgb(6, 240, 15)',
+          incorrectBorder: '3px solid red',
+          isAnswered: true,
+        });
+      }
+    };
 
-  render() {
-    const { getQuestions, position, correctBorder, incorrectBorder,
-      isAnswered, counter, isDisabled } = this.state;
-    // console.log(getQuestions);
-    // console.log(position);
+    render() {
+      const { getQuestions, position, correctBorder, incorrectBorder,
+        isAnswered, counter, isDisabled, rightAnswer, shuffledArray } = this.state;
 
-    if (counter < 0) {
-      this.setState({
-        counter: 0,
-        isDisabled: true,
-      });
-    }
+      // console.log(getQuestions);
+      // console.log(position);
 
-    // Os botões das alternativas devem ser elementos irmãos; ou seja, não podem estar dentro de outra tag
-    const correctOptions = (
-      <button
-        type="button"
-        data-testid="correct-answer"
-        onClick={ this.handleClickOption }
-        style={ { border: correctBorder } }
-        disabled={ isDisabled }
-      >
-        {getQuestions.length > 0
-        && getQuestions[position].correct_answer}
-      </button>
-    );
+      if (counter < 0) {
+        this.setState({
+          counter: 0,
+          isDisabled: true,
+        });
+      }
 
-    const incorrectOptions = (
-      getQuestions.length > 0
-              && getQuestions[position].incorrect_answers.map((incorrects, index) => (
+      return (
+        <div>
+          <Header />
+          <p>{counter}</p>
+
+          <p data-testid="question-category">
+            {getQuestions.length > 0
+          && getQuestions[position].category}
+          </p>
+
+          <p data-testid="question-text">
+            {getQuestions.length > 0
+          && getQuestions[position].question}
+          </p>
+
+          <section data-testid="answer-options">
+            {shuffledArray.length > 0
+              && shuffledArray[position].map((questions, index) => (
                 <button
                   key={ index }
+                  data-testid={ questions === rightAnswer[position]
+                    ? 'correct-answer' : `wrong-answer-${index}` }
                   type="button"
-                  data-testid={ `wrong-answer-${index}` }
                   onClick={ this.handleClickOption }
-                  style={ { border: incorrectBorder } }
+                  style={ questions === rightAnswer[position]
+                    ? { border: correctBorder } : { border: incorrectBorder } }
                   disabled={ isDisabled }
                 >
-                  {incorrects}
+                  {questions}
                 </button>
-              )));
+              ))}
+          </section>
 
-    const NUMBER_SHUFFLED = 0.5;
-
-    const arrayAllOptions = getQuestions.length > 0
-    && [correctOptions, ...incorrectOptions];
-
-    const random = getQuestions.length > 0
-&& arrayAllOptions.sort(() => Math.random() - NUMBER_SHUFFLED);
-
-    return (
-      <div>
-        <Header />
-
-        <p>{counter}</p>
-
-        <p data-testid="question-category">
-          {getQuestions.length > 0
-          && getQuestions[position].category}
-        </p>
-
-        <p data-testid="question-text">
-          {getQuestions.length > 0
-          && getQuestions[position].question}
-        </p>
-
-        <p data-testid="answer-options">
-          {getQuestions.length > 0
-          && random.map((allOptions) => (allOptions))}
-        </p>
-
-        {isAnswered
+          {isAnswered
         && (
           <button
             type="button"
@@ -212,11 +201,11 @@ class Game extends Component {
           </button>
         )}
 
-        {/* Pendente: lógica para ao chegar na última pergunta, voltar na primeira */}
+          {/* Pendente: lógica para ao chegar na última pergunta, voltar na primeira */}
 
-      </div>
-    );
-  }
+        </div>
+      );
+    }
 }
 
 Game.propTypes = {
