@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { fetchAPIPlayer, saveUserEmail, saveUserName } from '../redux/actions';
+import { saveUserEmail, saveUserName } from '../redux/actions';
+import { fetchApiPlayer } from '../services/triviaAPI';
+import { saveToken } from '../services/ranking';
 
 class Login extends Component {
   constructor() {
@@ -19,10 +21,8 @@ class Login extends Component {
     const { name, email } = this.state;
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const MIN_NAME_LENGTH = 0;
-    const validation = [name.length > MIN_NAME_LENGTH && regex.test(email)];
-    this.setState({
-      isDisabled: !validation.every((element) => element === true),
-    });
+    const validation = name.length > MIN_NAME_LENGTH && regex.test(email);
+    this.setState({ isDisabled: !validation });
   }
 
   handleChange = ({ target }) => {
@@ -33,14 +33,14 @@ class Login extends Component {
   }
 
   handleClick = async (event) => {
-    const { history, getFetchAPI } = this.props;
     event.preventDefault();
 
-    await getFetchAPI();
-
+    const { history, setUserEmail, setUserName } = this.props;
     const { email, name } = this.state;
-    const { setUserEmail, setUserName } = this.props;
 
+    const token = await fetchApiPlayer();
+
+    saveToken(token);
     setUserName(name);
     setUserEmail(email);
 
@@ -92,23 +92,14 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  getFetchAPI: PropTypes.func.isRequired,
   setUserEmail: PropTypes.func.isRequired,
   setUserName: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  token: state.token,
-});
-
 const mapDispatchToProps = (dispatch) => ({
-  getFetchAPI: () => dispatch(fetchAPIPlayer()),
   setUserEmail: (email) => dispatch(saveUserEmail(email)),
   setUserName: (name) => dispatch(saveUserName(name)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
-
-//
-//
+export default connect(null, mapDispatchToProps)(Login);
