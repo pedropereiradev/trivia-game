@@ -13,6 +13,8 @@ class Game extends Component {
       isAnswered: false,
       counter: 30,
       isDisabled: false,
+      rightAnswer: [],
+      shuffledArray: [],
     };
   }
 
@@ -21,12 +23,23 @@ class Game extends Component {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
-      const result = await response.json();
-      console.log(result);
+      const { results } = await response.json();
+      console.log(results);
 
-      if (result.results.length > 0) {
+      if (results.length > 0) {
         this.setState({
-          getQuestions: result.results,
+          getQuestions: results,
+        }, () => {
+          const { getQuestions } = this.state;
+          const NUMBER_SHUFFLED = 0.5;
+          getQuestions.map((questionObj) => (
+            this.setState((prevState) => ({
+              shuffledArray: [...prevState.shuffledArray, [questionObj
+                .correct_answer, ...questionObj.incorrect_answers]
+                .sort(() => Math.random() - NUMBER_SHUFFLED)],
+              rightAnswer: [...prevState.rightAnswer, questionObj.correct_answer],
+            }))
+          ));
         });
       } else {
         const { history } = this.props;
@@ -60,8 +73,8 @@ class Game extends Component {
   }
 
   handleClickOption = () => {
-    // console.log('works');
-    const { getQuestions } = this.state;
+    const { getQuestions, shuffledArray } = this.state;
+    console.log(shuffledArray[0]);
     if (getQuestions.length > 0) {
       this.setState({
         correctBorder: '3px solid rgb(6, 240, 15)',
@@ -73,9 +86,7 @@ class Game extends Component {
 
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
-      isAnswered, counter, isDisabled } = this.state;
-
-    console.log(getQuestions);
+      isAnswered, counter, isDisabled, rightAnswer, shuffledArray } = this.state;
 
     if (counter < 0) {
       this.setState({
@@ -84,48 +95,9 @@ class Game extends Component {
       });
     }
 
-    // Os botões das alternativas devem ser elementos irmãos; ou seja, não podem estar dentro de outra tag
-
-    const correctOptions = (
-      <button
-        type="button"
-        data-testid="correct-answer"
-        onClick={ this.handleClickOption }
-        style={ { border: correctBorder } }
-        disabled={ isDisabled }
-      >
-        {getQuestions.length > 0
-        && getQuestions[position].correct_answer}
-      </button>
-    );
-
-    const incorrectOptions = (
-      getQuestions.length > 0
-              && getQuestions[position].incorrect_answers.map((incorrects, index) => (
-                <button
-                  key={ index }
-                  type="button"
-                  data-testid={ `wrong-answer-${index}` }
-                  onClick={ this.handleClickOption }
-                  style={ { border: incorrectBorder } }
-                  disabled={ isDisabled }
-                >
-                  {incorrects}
-                </button>
-              )));
-
-    const NUMBER_SHUFFLED = 0.5;
-
-    const arrayAllOptions = getQuestions.length > 0
-    && [correctOptions, ...incorrectOptions];
-
-    const random = getQuestions.length > 0
-&& arrayAllOptions.sort(() => Math.random() - NUMBER_SHUFFLED);
-
     return (
       <div>
         <Header />
-
         <p>{counter}</p>
 
         <p data-testid="question-category">
@@ -138,10 +110,23 @@ class Game extends Component {
           && getQuestions[position].question}
         </p>
 
-        <p data-testid="answer-options">
-          {getQuestions.length > 0
-          && random.map((allOptions) => (allOptions))}
-        </p>
+        <section data-testid="answer-options">
+          {shuffledArray.length > 0
+              && shuffledArray[position].map((questions, index) => (
+                <button
+                  key={ index }
+                  data-testid={ questions === rightAnswer[position]
+                    ? 'correct-answer' : `wrong-answer-${index}` }
+                  type="button"
+                  onClick={ this.handleClickOption }
+                  style={ questions === rightAnswer[position]
+                    ? { border: correctBorder } : { border: incorrectBorder } }
+                  disabled={ isDisabled }
+                >
+                  {questions}
+                </button>
+              ))}
+        </section>
 
         {isAnswered
         && (
