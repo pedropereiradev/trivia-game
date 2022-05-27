@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './Header';
 import { getAssertions, saveScore } from '../redux/actions';
+import { getToken, saveToken } from '../services/ranking';
+import { fetchApiGame } from '../services/triviaAPI';
 
 class Game extends Component {
   constructor() {
@@ -22,24 +24,19 @@ class Game extends Component {
 
   componentDidMount = async () => {
     const { counter } = this.state;
+    const { history } = this.props;
 
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
-      const result = await response.json();
-      console.log(result);
+    const token = getToken();
 
-      if (result.results.length > 0) {
-        this.setState({
-          getQuestions: result.results,
-        });
-      } else {
-        const { history } = this.props;
-        history.push('/');
-        localStorage.setItem('token', '');
-      }
-    } catch (error) {
-      console.log(error);
+    const questions = await fetchApiGame(token);
+
+    if (questions.length > 0) {
+      this.setState({
+        getQuestions: questions,
+      });
+    } else {
+      history.push('/');
+      saveToken();
     }
 
     const ONE_SECOND = 1000;
