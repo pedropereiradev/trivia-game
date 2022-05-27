@@ -5,7 +5,7 @@ const INITIAL_STATE_USER = {
   assertions: 0,
 };
 
-const player = (state = INITIAL_STATE_USER, action) => {
+const playerReducer = (state = INITIAL_STATE_USER, action) => {
   switch (action.type) {
   case 'CHANGE_EMAIL':
     return { ...state, gravatarEmail: action.payload };
@@ -20,4 +20,4 @@ const player = (state = INITIAL_STATE_USER, action) => {
   }
 };
 
-export default player;
+export default playerReducer;
