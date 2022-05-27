@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Header from './Header';
+import { saveScore } from '../redux/actions';
 
 class Game extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       getQuestions: [],
       position: 0,
@@ -13,11 +15,13 @@ class Game extends Component {
       isAnswered: false,
       counter: 30,
       isDisabled: false,
+      score: 0,
     };
   }
 
   componentDidMount = async () => {
     const { counter } = this.state;
+
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
@@ -39,7 +43,7 @@ class Game extends Component {
 
     const ONE_SECOND = 1000;
 
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       if (counter > 0) {
         this.setState((prevState) => ({
           counter: prevState.counter - 1,
@@ -48,20 +52,71 @@ class Game extends Component {
     }, ONE_SECOND);
   }
 
+  stopTimer = () => {
+    clearInterval(this.intervalId);
+  }
+
   handleClickNext = () => {
-    const { getQuestions } = this.state;
+    const { getQuestions, position, counter } = this.state;
+    const { history } = this.props;
+    const ONE_SECOND = 1000;
+
+    this.intervalId = setInterval(() => {
+      if (counter > 0) {
+        this.setState((previousState) => ({
+          counter: previousState.counter - 1,
+        }));
+      }
+    }, ONE_SECOND);
+
+    if (position >= getQuestions.length - 1) {
+      history.push('/feedback');
+    }
+
     if (getQuestions.length > 0) {
       this.setState((previousState) => ({
         position: previousState.position + 1,
         correctBorder: '',
         incorrectBorder: '',
+        counter: 30,
       }));
     }
   }
 
-  handleClickOption = () => {
-    // console.log('works');
-    const { getQuestions } = this.state;
+  multDifficulty = (getDifficulty) => {
+    const ONE = 1;
+    const TWO = 2;
+    const THREE = 3;
+    if (getDifficulty === 'easy') {
+      return ONE;
+    }
+    if (getDifficulty === 'hard') {
+      return TWO;
+    } if (getDifficulty === 'medium') {
+      return THREE;
+    }
+  }
+
+  handleClickOption = ({ target }) => {
+    this.stopTimer();
+    const { getQuestions, counter, score } = this.state;
+    const question = target.innerHTML;
+    // console.log(question);
+    const findQuestion = getQuestions.find((quest) => quest.correct_answer === question);
+    if (findQuestion !== undefined) {
+      const getDifficulty = findQuestion.difficulty;
+      // console.log(getDifficulty);
+      const TEN = 10;
+      const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
+      this.setState({
+        score: totalScore,
+      });
+      // console.log(totalScore);
+
+      const { setUserScore } = this.props;
+      setUserScore(totalScore);
+    }
+
     if (getQuestions.length > 0) {
       this.setState({
         correctBorder: '3px solid rgb(6, 240, 15)',
@@ -74,8 +129,8 @@ class Game extends Component {
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
       isAnswered, counter, isDisabled } = this.state;
-
-    console.log(getQuestions);
+    // console.log(getQuestions);
+    // console.log(position);
 
     if (counter < 0) {
       this.setState({
@@ -85,7 +140,6 @@ class Game extends Component {
     }
 
     // Os botões das alternativas devem ser elementos irmãos; ou seja, não podem estar dentro de outra tag
-
     const correctOptions = (
       <button
         type="button"
@@ -163,9 +217,14 @@ class Game extends Component {
 
 Game.propTypes = {
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
+  setUserScore: PropTypes.func.isRequired,
 };
 
-export default Game;
+const mapDispatchToProps = (dispatch) => ({
+  setUserScore: (score) => dispatch(saveScore(score)),
+});
+
+export default connect(null, mapDispatchToProps)(Game);
 
 // REQUISITO 6
 

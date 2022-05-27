@@ -1,37 +1,39 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Header from './Header';
 
 class Feedback extends Component {
   render() {
-    const { assertions, score, history } = this.props;
-    const MIN_ASSERTIONS = 3;
+    const { history } = this.props;
+    // const MIN_ASSERTIONS = 3;
 
     return (
       <div>
-        {/* Header */}
+        <Header />
         <h2 data-testid="feedback-text">
-          {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}
+          teste
+          {/* {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}  */}
         </h2>
 
-        <section>
-          <p>
-            Você acertou
-            {' '}
+        {/* <section> */}
+        {/* <p> */}
+        {/* Você acertou */}
+        {/* {' '}
             <span data-testid="feedback-total-question">{ assertions }</span>
             {' '}
             {assertions === 1 ? 'questão' : 'questões'}
-            {' '}
-            !
-          </p>
+            {' '} */}
+        {/* ! */}
+        {/* </p>
           <p>
             Um total de
             {' '}
             <span data-testid="feedback-total-score">{score}</span>
             {' '}
-            {score === 1 ? 'ponto' : 'pontos'}
-          </p>
-        </section>
+            {score === 1 ? 'ponto' : 'pontos'} */}
+        {/* </p> */}
+        {/* </section> */}
         <section>
           <button
             type="button"
@@ -54,13 +56,13 @@ class Feedback extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  assertions: state.playerReducer.assertions,
-  score: state.playerReducer.score,
+  assertions: state.player.assertions,
+  score: state.player.score,
 });
 
 Feedback.propTypes = {
-  assertions: PropTypes.number.isRequired,
-  score: PropTypes.number.isRequired,
+  // assertions: PropTypes.number.isRequired,
+  // score: PropTypes.number.isRequired,
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
 };
 
