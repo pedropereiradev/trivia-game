@@ -18,6 +18,11 @@ export const getToken = (token) => ({
   payload: token,
 });
 
+export const getAssertions = (assertions) => ({
+  type: 'GET_ASSERTIONS',
+  payload: assertions,
+});
+
 export const fetchAPIPlayer = () => async (dispatch) => {
   try {
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
