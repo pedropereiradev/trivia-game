@@ -1,11 +1,16 @@
-export const saveUserEmail = (email) => ({
+export const saveUserEmail = (gravatarEmail) => ({
   type: 'CHANGE_EMAIL',
-  payload: email,
+  payload: gravatarEmail,
 });
 
 export const saveUserName = (name) => ({
   type: 'CHANGE_NAME',
   payload: name,
+});
+
+export const saveScore = (score) => ({
+  type: 'CHANGE_SCORE',
+  payload: score,
 });
 
 export const getToken = (token) => ({
@@ -17,7 +22,7 @@ export const fetchAPIPlayer = () => async (dispatch) => {
   try {
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
     const { token } = await response.json();
-    console.log(token);
+    // console.log(token);
     dispatch(getToken(token));
     localStorage.setItem('token', token);
   } catch (error) {
