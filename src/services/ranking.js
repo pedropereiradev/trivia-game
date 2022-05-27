@@ -18,7 +18,7 @@ export const saveNewGame = (game) => {
 
   const ranking = readRanking();
 
-  localStorage.setItem(RANKING_KEY, JSON.stringify([ranking, ...game]));
+  localStorage.setItem(RANKING_KEY, JSON.stringify([...ranking, game]));
 };
 
 export const getRanking = () => readRanking();

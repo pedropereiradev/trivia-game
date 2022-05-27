@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import md5 from 'crypto-js/md5';
 import Header from './Header';
+import { saveNewGame } from '../services/ranking';
 
 class Feedback extends Component {
   render() {
-    const { history, assertions, score } = this.props;
+    const { history, assertions, score, name, gravatarEmail } = this.props;
     const MIN_ASSERTIONS = 3;
+
+    const encriptedEmail = md5(gravatarEmail).toString();
+    const picture = `https://www.gravatar.com/avatar/${encriptedEmail}`;
+
+    saveNewGame({ name, score, picture });
 
     return (
       <div>
@@ -22,7 +29,6 @@ class Feedback extends Component {
             <span data-testid="feedback-total-question">{ assertions }</span>
             {' '}
             {assertions === 1 ? 'questão' : 'questões'}
-            {' '}
             !
           </p>
           <p>
@@ -55,11 +61,15 @@ class Feedback extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  name: state.player.name,
   assertions: state.player.assertions,
   score: state.player.score,
+  gravatarEmail: state.player.gravatarEmail,
 });
 
 Feedback.propTypes = {
+  name: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
