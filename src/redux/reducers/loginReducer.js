@@ -13,6 +13,8 @@ const player = (state = INITIAL_STATE_USER, action) => {
     return { ...state, name: action.payload };
   case 'CHANGE_SCORE':
     return { ...state, score: action.payload };
+  case 'GET_ASSERTIONS':
+    return { ...state, assertions: action.payload };
   default:
     return state;
   }
