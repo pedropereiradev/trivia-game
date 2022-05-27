@@ -13,7 +13,7 @@ class Feedback extends Component {
         <Header />
         <h2 data-testid="feedback-text">
           teste
-          {/* {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'} */}
+          {/* {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}  */}
         </h2>
 
         {/* <section> */}
