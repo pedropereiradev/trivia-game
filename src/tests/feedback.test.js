@@ -44,5 +44,14 @@ describe('Feedback page test', () => {
 
     const message1 = screen.getByRole('heading', { name: /Could be better.../i, level: 2 });
     expect(message1).toBeInTheDocument();
+
+    const message = screen.getByTestId(/feedback-text/i);
+    expect(message).toBeInTheDocument();
+
+    const point = screen.getByTestId(/feedback-total-score/i);
+    expect(point).toBeInTheDocument();
+
+    const question = screen.getByTestId(/feedback-total-question/i);
+    expect(question).toBeInTheDocument();
   });
 });
