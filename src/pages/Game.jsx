@@ -65,20 +65,15 @@ class Game extends Component {
 
   stopTimer = () => {
     clearInterval(this.intervalId);
+    this.setState({
+      isDisabled: true,
+      counter: 0,
+    });
   }
 
   handleClickNext = () => {
-    const { getQuestions, position, counter } = this.state;
+    const { getQuestions, position } = this.state;
     const { history } = this.props;
-    const ONE_SECOND = 1000;
-
-    this.intervalId = setInterval(() => {
-      if (counter > 0) {
-        this.setState((previousState) => ({
-          counter: previousState.counter - 1,
-        }));
-      }
-    }, ONE_SECOND);
 
     if (position >= getQuestions.length - 1) {
       history.push('/feedback');
@@ -95,16 +90,16 @@ class Game extends Component {
   }
 
   multDifficulty = (getDifficulty) => {
-    const ONE = 1;
-    const TWO = 2;
     const THREE = 3;
-    if (getDifficulty === 'easy') {
-      return ONE;
-    }
-    if (getDifficulty === 'hard') {
+    switch (getDifficulty) {
+    case 'easy':
+      return 1;
+    case 'medium':
+      return 2;
+    case 'hard':
       return THREE;
-    } if (getDifficulty === 'medium') {
-      return TWO;
+    default:
+      return 1;
     }
   };
 
@@ -150,17 +145,14 @@ class Game extends Component {
     // console.log(getQuestions);
     // console.log(position);
 
-    if (counter < 0) {
-      this.setState({
-        counter: 0,
-        isDisabled: true,
-      });
-    }
+    if (counter < 0) this.stopTimer();
 
     return (
       <div>
         <Header />
-        <p>{counter}</p>
+        <h1>
+          {`Timer ${counter} `}
+        </h1>
 
         <p data-testid="question-category">
           {getQuestions.length > 0
