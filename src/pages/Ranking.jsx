@@ -12,7 +12,7 @@ class Ranking extends Component {
           onClick={ () => history.push('/') }
           data-testid="btn-go-home"
         >
-          Jogar novamente
+          Play Again
         </button>
       </div>
     );

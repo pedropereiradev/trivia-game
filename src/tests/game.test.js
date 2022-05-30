@@ -1,24 +1,13 @@
 import React from 'react';
-import { findByTestId, findByText, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
-import { element } from 'prop-types';
 
 describe('Game page test', () => {
-  test('Verify if game is correctly render', async () => {
+  test('Verify if game is correctly render - since Login', async () => {
     renderWithRouterAndRedux(<App />);
-    const inputName = screen.getByTestId('input-player-name');
-    const inputEmail = screen.getByTestId('input-gravatar-email');
-    userEvent.type(inputName, 'Geovana');
-    userEvent.type(inputEmail, 'teste@trybe.com');
-  
-    const buttonPlay = screen.getByTestId(/btn-play/i);
-    expect(buttonPlay).toBeInTheDocument();
-
-    const buttonSettings = screen.getByTestId(/btn-settings/i);
-    expect(buttonSettings).toBeInTheDocument();
-    userEvent.click(buttonPlay);
+    history.push('/game')
 
     const img = await screen.findByAltText('off symbol');
     await expect(img).toBeInTheDocument();
@@ -38,11 +27,14 @@ describe('Game page test', () => {
   test('Verify if border selector works', async () => {
     const { history } = renderWithRouterAndRedux(<App />);
     history.push('/game')
+
     const buttonTrue = await screen.findByTestId('correct-answer')
     await expect(buttonTrue).toBeInTheDocument();
+
     const buttonsFalse = await screen.findAllByTestId(/wrong-answer-/i)
     buttonsFalse.map((button) => expect(button).toBeInTheDocument());
     userEvent.click(buttonTrue);
+
     await expect(buttonTrue).toHaveAttribute('style', 'border: 3px solid rgb(6, 240, 15);');
     userEvent.click(buttonsFalse[0]);
     await expect(buttonsFalse[0]).toHaveAttribute('style', 'border: 3px solid red;');
@@ -56,12 +48,12 @@ describe('Game page test', () => {
      await expect(buttonsFalse[0]).not.toHaveAttribute();
   });
 
-  test('sdass', async () => {
+  test('Verify if the button Next redirect to Ranking after last question', async () => {
     const { history } = renderWithRouterAndRedux(<App />);
     history.push('/game')
+  
     const buttonTrue = await screen.findByTestId('correct-answer')
     await expect(buttonTrue).toBeInTheDocument();
-
     userEvent.click(buttonTrue);
 
     const buttonNext = await screen.findByTestId(/btn-next/i);
