@@ -84,6 +84,5 @@ describe('Game page test', () => {
     const buttonRanking= screen.getByRole("button", {name: /Ranking/i}); 
     expect(buttonRanking).toBeInTheDocument(); 
     expect(buttonRanking).not.toBeDisabled();
-
 });
 });
