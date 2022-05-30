@@ -60,22 +60,24 @@ describe('Game page test', () => {
     const { history } = renderWithRouterAndRedux(<App />);
     history.push('/game')
     const buttonTrue = await screen.findByTestId('correct-answer')
-    const buttonNext = await screen.findByTestId('btn-next');
+    await expect(buttonTrue).toBeInTheDocument();
 
     userEvent.click(buttonTrue);
-    userEvent.click(buttonNext);
+
+    const buttonNext = await screen.findByTestId(/btn-next/i);
+     userEvent.click(buttonNext);
 
     userEvent.click(buttonTrue);
-    userEvent.click(buttonNext);
+     userEvent.click(buttonNext);
 
     userEvent.click(buttonTrue);
-    userEvent.click(buttonNext);
+     userEvent.click(buttonNext);
 
     userEvent.click(buttonTrue);
-    userEvent.click(buttonNext);
+     userEvent.click(buttonNext);
 
     userEvent.click(buttonTrue);
-    userEvent.click(buttonNext);
+     userEvent.click(buttonNext);
 
     const buttonPlayAgain= screen.getByRole("button", {name: /Play Again/i}); 
     expect(buttonPlayAgain).toBeInTheDocument(); 

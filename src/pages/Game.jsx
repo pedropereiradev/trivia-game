@@ -25,11 +25,22 @@ class Game extends Component {
     };
   }
 
-  componentDidMount = async () => {
+  timer = () => {
     const { counter } = this.state;
+    const ONE_SECOND = 1000;
+
+    this.intervalId = setInterval(() => {
+      if (counter > 0) {
+        this.setState((prevState) => ({
+          counter: prevState.counter - 1,
+        }));
+      }
+    }, ONE_SECOND);
+  }
+
+  componentDidMount = async () => {
     const { history } = this.props;
     const token = getToken();
-
     const questions = await fetchApiGame(token);
 
     if (questions.length > 0) {
@@ -51,29 +62,18 @@ class Game extends Component {
       history.push('/');
       saveToken();
     }
-
-    const ONE_SECOND = 1000;
-
-    this.intervalId = setInterval(() => {
-      if (counter > 0) {
-        this.setState((prevState) => ({
-          counter: prevState.counter - 1,
-        }));
-      }
-    }, ONE_SECOND);
+    this.timer();
   }
 
   stopTimer = () => {
     clearInterval(this.intervalId);
-    this.setState({
-      isDisabled: true,
-      counter: 0,
-    });
   }
 
   handleClickNext = () => {
     const { getQuestions, position } = this.state;
     const { history } = this.props;
+
+    this.timer();
 
     if (position >= getQuestions.length - 1) {
       history.push('/feedback');
@@ -145,7 +145,12 @@ class Game extends Component {
     // console.log(getQuestions);
     // console.log(position);
 
-    if (counter < 0) this.stopTimer();
+    if (counter < 0) {
+      this.setState({
+        isDisabled: true,
+        counter: 0,
+      });
+    }
 
     return (
       <div>
