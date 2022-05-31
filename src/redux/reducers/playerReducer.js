@@ -1,3 +1,10 @@
+import {
+  CHANGE_EMAIL,
+  CHANGE_NAME,
+  CHANGE_SCORE,
+  GET_ASSERTIONS,
+} from '../actions';
+
 const INITIAL_STATE_USER = {
   name: '',
   gravatarEmail: '',
@@ -7,16 +14,14 @@ const INITIAL_STATE_USER = {
 
 const playerReducer = (state = INITIAL_STATE_USER, action) => {
   switch (action.type) {
-  case 'CHANGE_EMAIL':
+  case CHANGE_EMAIL:
     return { ...state, gravatarEmail: action.payload };
-  case 'CHANGE_NAME':
+  case CHANGE_NAME:
     return { ...state, name: action.payload };
-  case 'CHANGE_SCORE':
+  case CHANGE_SCORE:
     return { ...state, score: action.payload };
-  case 'GET_ASSERTIONS':
+  case GET_ASSERTIONS:
     return { ...state, assertions: action.payload };
-  case 'CLEAR_PLAYER_INFO':
-    return INITIAL_STATE_USER;
   default:
     return state;
   }
