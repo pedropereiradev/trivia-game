@@ -15,6 +15,8 @@ const playerReducer = (state = INITIAL_STATE_USER, action) => {
     return { ...state, score: action.payload };
   case 'GET_ASSERTIONS':
     return { ...state, assertions: action.payload };
+  case 'CLEAR_PLAYER_INFO':
+    return INITIAL_STATE_USER;
   default:
     return state;
   }
