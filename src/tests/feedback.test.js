@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import Feedback from '../pages/Feedback';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
-import App from '../App'
+import App from '../App';
 
 describe('Feedback page test', () => {
   test('Verify if button "play again" is working correctly', () => {
@@ -53,5 +53,81 @@ describe('Feedback page test', () => {
 
     const question = screen.getByTestId(/feedback-total-question/i);
     expect(question).toBeInTheDocument();
+  });
+
+  test('Should show "Could be better..." when assert less then three questions', () => {
+    const initialState = {
+      player: {
+        name: 'pedro',
+        gravatarEmail: 'teste@teste.com',
+        score: 0,
+        assertions: 1,
+      },
+    };
+
+    renderWithRouterAndRedux(<App />, initialState, '/feedback');
+
+    const feedbackMessage = screen.getByRole('heading', {
+      name: /Could be better.../i,
+      level: 2,
+    });
+    
+    expect(feedbackMessage).toBeInTheDocument();
+  });
+
+  test('Should show "Well Done!" when assert 3 or more questions', async () => {
+    const initialState = {
+      player: {
+        name: 'pedro',
+        gravatarEmail: 'teste@teste.com',
+        score: 0,
+        assertions: 3,
+      },
+    };
+
+    renderWithRouterAndRedux(<App />, initialState, '/feedback');
+
+    const feedbackMessage = screen.getByRole('heading', {
+      name: 'Well Done!',
+      level: 2,
+    });
+    
+    expect(feedbackMessage).toBeInTheDocument();
+  });
+
+  test('Should show "Questão" when just one assertion', () => {
+    const initialState = {
+      player: {
+        name: 'pedro',
+        gravatarEmail: 'teste@teste.com',
+        score: 0,
+        assertions: 1,
+      },
+    };
+
+    renderWithRouterAndRedux(<App />, initialState, '/feedback');
+
+    const assertionText = screen.getByText(/questão/i);
+
+    expect(assertionText).toBeInTheDocument();
+    expect(assertionText).not.toBe(/questões/i);
+  });
+
+  test('Should show "Questões" when more then one assertion', () => {
+    const initialState = {
+      player: {
+        name: 'pedro',
+        gravatarEmail: 'teste@teste.com',
+        score: 0,
+        assertions: 2,
+      },
+    };
+    
+    renderWithRouterAndRedux(<App />, initialState, '/feedback');
+
+    const assertionText = screen.getByText(/questões/i);
+
+    expect(assertionText).toBeInTheDocument();
+    expect(assertionText).not.toBe(/questão/i);
   });
 });

@@ -28,15 +28,15 @@ class Feedback extends Component {
             {' '}
             <span data-testid="feedback-total-question">{ assertions }</span>
             {' '}
-            {/* {assertions === 1 ? 'questão' : 'questões'} */}
+            {assertions === 1 ? 'questão' : 'questões'}
             !
           </p>
           <h3>
             Um total de
             {' '}
-            <span data-testid="feedback-total-score">{score}</span>
+            <span data-testid="feedback-total-score">{ score }</span>
             {' '}
-            {/* {score === 1 ? 'ponto' : 'pontos'} */}
+            pontos
           </h3>
         </section>
         <section>
