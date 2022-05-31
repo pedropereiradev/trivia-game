@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { saveUserEmail, saveUserName } from '../redux/actions';
+import { clearPlayerInfo, saveUserEmail, saveUserName } from '../redux/actions';
 import { fetchApiPlayer } from '../services/triviaAPI';
 import { saveToken } from '../services/ranking';
 
@@ -15,6 +15,10 @@ class Login extends Component {
       email: '',
       isDisabled: true,
     };
+  }
+
+  componentDidMount() {
+    clearPlayerInfo();
   }
 
   validate = () => {
@@ -100,6 +104,7 @@ Login.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
   setUserEmail: (email) => dispatch(saveUserEmail(email)),
   setUserName: (name) => dispatch(saveUserName(name)),
+  clearPlayerInfo: () => dispatch(clearPlayerInfo),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

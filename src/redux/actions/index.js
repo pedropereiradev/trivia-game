@@ -17,3 +17,7 @@ export const getAssertions = (assertions) => ({
   type: 'GET_ASSERTIONS',
   payload: assertions,
 });
+
+export const clearPlayerInfo = () => ({
+  type: 'CLEAR_PLAYER_INFO',
+});
