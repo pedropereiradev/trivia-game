@@ -1,7 +1,12 @@
 const TOKEN_KEY = 'token';
 const RANKING_KEY = 'ranking';
 
-const readRanking = () => JSON.parse(localStorage.getItem(RANKING_KEY));
+const readRanking = () => {
+  if (!JSON.parse(localStorage.getItem(RANKING_KEY))) {
+    localStorage.setItem(RANKING_KEY, JSON.stringify([]));
+  }
+  return JSON.parse(localStorage.getItem(RANKING_KEY));
+};
 
 export const saveToken = (token = '') => {
   localStorage.setItem(TOKEN_KEY, token);
