@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { connect } from 'react-redux';
 import { getRanking } from '../services/ranking';
 import { saveScore } from '../redux/actions';
@@ -29,7 +28,6 @@ class Ranking extends Component {
 
   render() {
     const { ranking } = this.state;
-    console.log(ranking);
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>
@@ -66,9 +64,11 @@ class Ranking extends Component {
     );
   }
 }
+// asdsaddasdsadw
 
 Ranking.propTypes = {
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
+  setUserScore: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
