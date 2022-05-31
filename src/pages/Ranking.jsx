@@ -19,14 +19,10 @@ class Ranking extends Component {
     });
   }
 
-  HandlerClick = () => {
-    const { history } = this.props;
-
-    history.push('/');
-  }
-
   render() {
     const { ranking } = this.state;
+    const { history } = this.props;
+
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>
@@ -54,7 +50,7 @@ class Ranking extends Component {
         </ol>
         <button
           type="button"
-          onClick={ this.HandlerClick }
+          onClick={ () => history.push('/') }
           data-testid="btn-go-home"
         >
           Jogar novamente
