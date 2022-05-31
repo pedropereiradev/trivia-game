@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { connect } from 'react-redux';
 import { getRanking } from '../services/ranking';
+import { saveScore } from '../redux/actions';
 
 class Ranking extends Component {
   constructor() {
@@ -15,13 +17,19 @@ class Ranking extends Component {
     const ranking = getRanking();
     console.log(ranking);
     this.setState({
-      ranking: ranking.sort((p, s) => s.score - p.score),
+      ranking: ranking.sort((a, b) => b.score - a.score),
     });
   }
 
+  HandlerClick = () => {
+    const { setUserScore, history } = this.props;
+    setUserScore(0);
+    history.push('/');
+  }
+
   render() {
-    const { history } = this.props;
     const { ranking } = this.state;
+    console.log(ranking);
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>
@@ -31,17 +39,17 @@ class Ranking extends Component {
               <li key={ index }>
                 <img
                   src={ player.picture }
-                  alt={ `imagem de perfil de ${ player.name} ` }
+                  alt={ `imagem de perfil de ${player.name} ` }
                 />
                 <p
-                  data-testid={ `player-name-${ index }` }
+                  data-testid={ `player-name-${index}` }
                 >
-                  { player.name }
+                  {player.name}
                 </p>
                 <p
-                  data-testid={ `player-score-${ index }` }
+                  data-testid={ `player-score-${index}` }
                 >
-                  { player.score }
+                  {player.score}
                 </p>
               </li>
             ))
@@ -49,7 +57,7 @@ class Ranking extends Component {
         </ol>
         <button
           type="button"
-          onClick={ () => history.push('/') }
+          onClick={ this.HandlerClick }
           data-testid="btn-go-home"
         >
           Jogar novamente
@@ -63,4 +71,8 @@ Ranking.propTypes = {
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
 };
 
-export default Ranking;
+const mapDispatchToProps = (dispatch) => ({
+  setUserScore: (score) => dispatch(saveScore(score)),
+});
+
+export default connect(null, mapDispatchToProps)(Ranking);
