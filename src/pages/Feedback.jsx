@@ -26,7 +26,7 @@ class Feedback extends Component {
           <p>
             Você acertou
             {' '}
-            <span data-testid="feedback-total-question">{ toString(assertions) }</span>
+            <span data-testid="feedback-total-question">{ assertions }</span>
             {' '}
             {assertions === 1 ? 'questão' : 'questões'}
             !
@@ -34,7 +34,7 @@ class Feedback extends Component {
           <h3>
             Um total de
             {' '}
-            <span data-testid="feedback-total-score">{ toString(score) }</span>
+            <span data-testid="feedback-total-score">{ score }</span>
             {' '}
             pontos
           </h3>
