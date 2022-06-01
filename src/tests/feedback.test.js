@@ -7,30 +7,52 @@ import App from '../App';
 
 describe('Feedback page test', () => {
   test('Verify if button "play again" is working correctly', () => {
-    const { history } =  renderWithRouterAndRedux(<App />);
-   history.push('/feedback')
-    const buttonPlayAgain= screen.getByRole("button", {name: /Play Again/i}); 
+    const initialState = {
+      player: {
+        name: 'teste',
+        gravatarEmail: 'teste@teste.com',
+        score: 0,
+        assertions: 3,
+      },
+    };
+
+    const { history } =  renderWithRouterAndRedux(<App />, initialState, '/feedback');
+    
+    const buttonPlayAgain = screen.getByRole("button", { name: /Play Again/i }); 
+    
     expect(buttonPlayAgain).toBeInTheDocument(); 
     expect(buttonPlayAgain).not.toBeDisabled();
+    
     userEvent.click(buttonPlayAgain);
+    
     expect(history.location.pathname).toBe('/'); 
   });
 
   test('Verify if button "ranking" is working correctly', () => {
-    const { history } =  renderWithRouterAndRedux(<App />);
-    history.push('/feedback')
+    const initialState = {
+      player: {
+        name: 'teste',
+        gravatarEmail: 'teste@teste.com',
+        score: 0,
+        assertions: 3,
+      },
+    };
+
+    const { history } =  renderWithRouterAndRedux(<App />, initialState, '/feedback');
 
     const buttonRanking= screen.getByRole("button", {name: /Ranking/i}); 
+    
     expect(buttonRanking).toBeInTheDocument(); 
     expect(buttonRanking).not.toBeDisabled();
+    
     userEvent.click(buttonRanking);
+    
     expect(history.location.pathname).toBe('/ranking');
 
-    const buttonPlayAgain= screen.getByRole("button", {name: /Play Again/i}); 
+    const buttonPlayAgain= screen.getByRole("button", {name: /Jogar novamente/i}); 
+    
     expect(buttonPlayAgain).toBeInTheDocument(); 
-    expect(buttonPlayAgain).not.toBeDisabled();
-    userEvent.click(buttonPlayAgain);
-    expect(history.location.pathname).toBe('/');   
+
   });
 
   test('Verify if elements are render correctly', async () => {

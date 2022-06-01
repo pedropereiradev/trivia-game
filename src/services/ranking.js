@@ -5,6 +5,7 @@ const readRanking = () => {
   if (!JSON.parse(localStorage.getItem(RANKING_KEY))) {
     localStorage.setItem(RANKING_KEY, JSON.stringify([]));
   }
+
   return JSON.parse(localStorage.getItem(RANKING_KEY));
 };
 
@@ -12,9 +13,13 @@ export const saveToken = (token = '') => {
   localStorage.setItem(TOKEN_KEY, token);
 };
 
-export const getToken = () => (
-  localStorage.getItem(TOKEN_KEY)
-);
+export const getToken = () => {
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    localStorage.setItem(TOKEN_KEY, '');
+  }
+
+  return localStorage.getItem(TOKEN_KEY);
+};
 
 export const saveNewGame = (game) => {
   if (!JSON.parse(localStorage.getItem(RANKING_KEY))) {

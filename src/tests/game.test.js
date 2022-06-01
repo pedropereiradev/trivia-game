@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 
 describe('Game page test', () => {
   test('Verify if game is correctly render - since Login', async () => {
-    renderWithRouterAndRedux(<App />);
+    const { history } = renderWithRouterAndRedux(<App />);
     history.push('/game')
 
     const img = await screen.findByAltText('off symbol');
