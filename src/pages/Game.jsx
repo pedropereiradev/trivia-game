@@ -11,35 +11,32 @@ class Game extends Component {
     super();
     this.state = {
       getQuestions: [],
+      shuffledArray: [],
+      rightAnswer: [],
+      assertions: 0,
       position: 0,
+      counter: 30,
+      score: 0,
       correctBorder: '',
       incorrectBorder: '',
       isAnswered: false,
-      counter: 30,
       isDisabled: false,
-      rightAnswer: [],
-      shuffledArray: [],
-      score: 0,
-      assertions: 0,
-
     };
   }
 
   timer = () => {
-    const { counter } = this.state;
     const ONE_SECOND = 1000;
 
     this.intervalId = setInterval(() => {
-      if (counter > 0) {
-        this.setState((prevState) => ({
-          counter: prevState.counter - 1,
-        }));
-      }
+      this.setState(({ counter }) => ({
+        counter: counter - 1,
+      }));
     }, ONE_SECOND);
   }
 
   componentDidMount = async () => {
     const { history } = this.props;
+
     const token = getToken();
     const questions = await fetchApiGame(token);
 
@@ -62,6 +59,7 @@ class Game extends Component {
       history.push('/');
       saveToken();
     }
+
     this.timer();
   }
 
@@ -105,15 +103,19 @@ class Game extends Component {
 
   handleClickOption = ({ target }) => {
     this.stopTimer();
+
     const { getQuestions, counter, score } = this.state;
+    const { setUserScore } = this.props;
+
     const question = target.innerHTML;
     const findQuestion = getQuestions
       .find((quest) => quest.correct_answer === question);
+
     if (findQuestion !== undefined) {
       const getDifficulty = findQuestion.difficulty;
-      // console.log(getDifficulty);
       const TEN = 10;
       const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
+
       this.setState(({ assertions }) => ({
         score: totalScore,
         assertions: assertions + 1,
@@ -123,9 +125,7 @@ class Game extends Component {
 
         setAssertions(assertions);
       });
-      // console.log(totalScore);
 
-      const { setUserScore } = this.props;
       setUserScore(totalScore);
     }
 
@@ -141,9 +141,6 @@ class Game extends Component {
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
       isAnswered, counter, isDisabled, rightAnswer, shuffledArray } = this.state;
-
-    // console.log(getQuestions);
-    // console.log(position);
 
     if (counter < 0) {
       this.setState({
@@ -197,9 +194,6 @@ class Game extends Component {
             Next
           </button>
         )}
-
-        {/* Pendente: lógica para ao chegar na última pergunta, voltar na primeira */}
-
       </div>
     );
   }
@@ -217,11 +211,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(Game);
-
-// REQUISITO 6
-
-// Alternativas aleatórias https://www.delftstack.com/pt/howto/javascript/shuffle-array-javascript/#:~:text=utilizando%20Console.log()%3A-,function%20shuffleArray(inputArray)%7B%0A%20%20%20%20inputArray.sort(()%3D%3E%20Math.random()%20%2D%200.5)%3B%0A%7D,-var%20demoArray%20%3D%20%5B1
-
-// REQUISITO 8
-// https://github.com/tryber/sd-020-a-live-lectures/blob/lecture/12.1/trybem-estar/src/components/Timer.js
-// https://sebhastian.com/setinterval-react/
