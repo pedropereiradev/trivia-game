@@ -113,8 +113,8 @@ class Game extends Component {
         score: totalScore,
         assertions: assertions + 1,
       }), () => {
-        const { assertions } = this.state;
         const { setAssertions } = this.props;
+        const { assertions } = this.state;
 
         setAssertions(assertions);
       });
