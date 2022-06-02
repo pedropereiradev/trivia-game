@@ -20,7 +20,6 @@ class Game extends Component {
       correctBorder: '',
       incorrectBorder: '',
       isAnswered: false,
-      isDisabled: false,
     };
   }
 
@@ -63,10 +62,6 @@ class Game extends Component {
     this.timer();
   }
 
-  stopTimer = () => {
-    clearInterval(this.intervalId);
-  }
-
   handleClickNext = () => {
     const { getQuestions, position } = this.state;
     const { history } = this.props;
@@ -77,14 +72,12 @@ class Game extends Component {
       history.push('/feedback');
     }
 
-    if (getQuestions.length > 0) {
-      this.setState((previousState) => ({
-        position: previousState.position + 1,
-        correctBorder: '',
-        incorrectBorder: '',
-        counter: 30,
-      }));
-    }
+    this.setState((previousState) => ({
+      position: previousState.position + 1,
+      correctBorder: '',
+      incorrectBorder: '',
+      counter: 30,
+    }));
   }
 
   multDifficulty = (getDifficulty) => {
@@ -102,7 +95,7 @@ class Game extends Component {
   };
 
   handleClickOption = ({ target }) => {
-    this.stopTimer();
+    clearInterval(this.intervalId);
 
     const { getQuestions, counter, score } = this.state;
     const { setUserScore } = this.props;
@@ -120,8 +113,8 @@ class Game extends Component {
         score: totalScore,
         assertions: assertions + 1,
       }), () => {
-        const { assertions } = this.state;
         const { setAssertions } = this.props;
+        const { assertions } = this.state;
 
         setAssertions(assertions);
       });
@@ -129,25 +122,16 @@ class Game extends Component {
       setUserScore(totalScore);
     }
 
-    if (getQuestions.length > 0) {
-      this.setState({
-        correctBorder: '3px solid rgb(6, 240, 15)',
-        incorrectBorder: '3px solid red',
-        isAnswered: true,
-      });
-    }
+    this.setState({
+      correctBorder: '3px solid rgb(6, 240, 15)',
+      incorrectBorder: '3px solid red',
+      isAnswered: true,
+    });
   };
 
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
-      isAnswered, counter, isDisabled, rightAnswer, shuffledArray } = this.state;
-
-    if (counter < 0) {
-      this.setState({
-        isDisabled: true,
-        counter: 0,
-      });
-    }
+      isAnswered, counter, rightAnswer, shuffledArray } = this.state;
 
     return (
       <div>
@@ -177,7 +161,7 @@ class Game extends Component {
                   onClick={ this.handleClickOption }
                   style={ questions === rightAnswer[position]
                     ? { border: correctBorder } : { border: incorrectBorder } }
-                  disabled={ isDisabled }
+                  disabled={ counter <= 0 }
                 >
                   {questions}
                 </button>
