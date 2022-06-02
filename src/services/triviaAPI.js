@@ -12,7 +12,7 @@ export const fetchApiPlayer = async () => {
 
 export const fetchApiGame = async (
   token,
-  { category = null, difficulty = null, type = null },
+  { category = '', difficulty = '', type = '' } = {},
 ) => {
   const apiUrl = `${BASE_URL}/api.php?amount=5${
     category && `&category=${category}`
@@ -20,7 +20,7 @@ export const fetchApiGame = async (
     type && `&type=${type}`
   }&token=${token}`;
 
-  console.log(apiUrl);
+  // console.log('teste', apiUrl);
 
   try {
     const response = await fetch(apiUrl);
