@@ -41,10 +41,3 @@ export const setTriviaSettingsType = (type) => ({
   type: SET_TRIVIA_SETTINGS_TYPE,
   payload: type,
 });
-
-/* export const setTriviaSetting = ({ category, difficulty, type }) => {
-  dispatch(setTriviaSettingsCategory(category));
-  dispatch(setTriviaSettingsDifficulty(difficulty));
-  dispatch(setTriviaSettingsType(type));
-};
- */

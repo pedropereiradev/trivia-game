@@ -1,4 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import {
+  setTriviaSettingsCategory,
+  setTriviaSettingsDifficulty,
+  setTriviaSettingsType,
+} from '../redux/actions';
 import { fetchApiCategories } from '../services/triviaAPI';
 
 class Settings extends Component {
@@ -16,7 +23,7 @@ class Settings extends Component {
   async componentDidMount() {
     const categories = await fetchApiCategories();
 
-    this.setState({ categories });
+    if (categories) this.setState({ categories });
   }
 
   handleChange = ({ target }) => {
@@ -27,7 +34,17 @@ class Settings extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    // To-Do: Criar store, armazenar o estado para chamar a requisição na tela de Game ou mudar ela pra ca
+    const { setApiCategory, setApiDifficulty, setApiType, history } = this.props;
+    const {
+      categorySelected,
+      difficultySelected,
+      typeSelected } = this.state;
+
+    setApiCategory(categorySelected);
+    setApiDifficulty(difficultySelected);
+    setApiType(typeSelected);
+
+    history.push('/game');
   }
 
   render() {
@@ -61,9 +78,9 @@ class Settings extends Component {
               id="difficultySelected"
             >
               <option value="">Qualquer dificuldade</option>
-              <option value="">Fácil</option>
-              <option value="">Média</option>
-              <option value="">Difícil</option>
+              <option value="easy">Fácil</option>
+              <option value="medium">Média</option>
+              <option value="hard">Difícil</option>
             </select>
           </label>
           <label htmlFor="typeSelected">
@@ -75,8 +92,8 @@ class Settings extends Component {
               id="typeSelected"
             >
               <option value="">Qualquer Tipo</option>
-              <option value="">Múltiĺa escolha</option>
-              <option value="">Verdadeiro / Falso</option>
+              <option value="multiple">Múltipla escolha</option>
+              <option value="boolean">Verdadeiro / Falso</option>
             </select>
           </label>
 
@@ -92,4 +109,17 @@ class Settings extends Component {
   }
 }
 
-export default Settings;
+Settings.propTypes = {
+  setApiCategory: PropTypes.func.isRequired,
+  setApiDifficulty: PropTypes.func.isRequired,
+  setApiType: PropTypes.func.isRequired,
+  history: PropTypes.objectOf(PropTypes.shape).isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  setApiCategory: (category) => dispatch(setTriviaSettingsCategory(category)),
+  setApiDifficulty: (difficulty) => dispatch(setTriviaSettingsDifficulty(difficulty)),
+  setApiType: (type) => dispatch(setTriviaSettingsType(type)),
+});
+
+export default connect(null, mapDispatchToProps)(Settings);
