@@ -20,8 +20,6 @@ export const fetchApiGame = async (
     type && `&type=${type}`
   }&token=${token}`;
 
-  // console.log('teste', apiUrl);
-
   try {
     const response = await fetch(apiUrl);
     const { results } = await response.json();
@@ -36,16 +34,6 @@ export const fetchApiCategories = async () => {
     const response = await fetch(`${BASE_URL}/api_category.php`);
     const { trivia_categories: triviaCategories } = await response.json();
     return triviaCategories;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const fetchMaxQuestions = async (categoryId) => {
-  try {
-    const response = await fetch(`${BASE_URL}/api_count.php?category=${categoryId}`);
-    const { category_question_count: categoryQuestionCount } = await response.json();
-    return categoryQuestionCount;
   } catch (error) {
     console.log(error);
   }
