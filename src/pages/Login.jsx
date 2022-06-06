@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import {
   saveScore, saveUserEmail, saveUserName,
   setTriviaSettingsCategory, setTriviaSettingsDifficulty, setTriviaSettingsType,
 } from '../redux/actions';
 import { fetchApiPlayer } from '../services/triviaAPI';
 import { saveToken } from '../services/ranking';
+
+import logo from '../trivia.png';
 
 class Login extends Component {
   constructor() {
@@ -61,43 +62,55 @@ class Login extends Component {
 
   render() {
     const { name, email, isDisabled } = this.state;
+    const { history } = this.props;
     return (
-      <div>
-        <input
-          type="text"
-          name="name"
-          placeholder="Insira seu nome"
-          value={ name }
-          onChange={ this.handleChange }
-          data-testid="input-player-name"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Insira seu e-mail"
-          value={ email }
-          onChange={ this.handleChange }
-          data-testid="input-gravatar-email"
-        />
-        <button
-          type="submit"
-          disabled={ isDisabled }
-          onClick={ this.handleClick }
-          data-testid="btn-play"
+      <div className="bg-dark vh-100">
+        <section
+          className="vh-100 d-flex flex-column justify-content-center align-items-center"
         >
-          Play
-        </button>
+          <img src={ logo } className="App-logo mb-5" alt="logo" />
+          <form>
+            <input
+              type="text"
+              name="name"
+              placeholder="Insira seu nome"
+              value={ name }
+              onChange={ this.handleChange }
+              data-testid="input-player-name"
+              className="form-control mb-2"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Insira seu e-mail"
+              value={ email }
+              onChange={ this.handleChange }
+              data-testid="input-gravatar-email"
+              className="form-control mb-3"
+            />
+            <section className="d-flex justify-content-between px-3">
+              <button
+                type="submit"
+                disabled={ isDisabled }
+                onClick={ this.handleClick }
+                data-testid="btn-play"
+                className="btn btn-primary px-4"
+              >
+                Play
+              </button>
 
-        <Link to="/settings">
-          <button
-            type="button"
-            data-testid="btn-settings"
-          >
-            {' '}
-            Settings
+              <button
+                type="button"
+                onClick={ () => history.push('/settings') }
+                data-testid="btn-settings"
+                className="btn btn-secondary"
+              >
+                Settings
+              </button>
+            </section>
 
-          </button>
-        </Link>
+          </form>
+        </section>
       </div>
     );
   }
