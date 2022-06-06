@@ -34,12 +34,12 @@ class Game extends Component {
   }
 
   componentDidMount = async () => {
-    const { history } = this.props;
+    const { history, settingsToApi } = this.props;
 
     const token = getToken();
-    const questions = await fetchApiGame(token);
+    const questions = await fetchApiGame(token, settingsToApi);
 
-    if (questions.length > 0) {
+    if (questions && questions.length > 0) {
       this.setState({
         getQuestions: questions,
       }, () => {
@@ -185,13 +185,18 @@ class Game extends Component {
 
 Game.propTypes = {
   history: PropTypes.objectOf(PropTypes.shape).isRequired,
+  settingsToApi: PropTypes.objectOf(PropTypes.string).isRequired,
   setUserScore: PropTypes.func.isRequired,
   setAssertions: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+  settingsToApi: state.triviaSettings,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   setUserScore: (score) => dispatch(saveScore(score)),
   setAssertions: (assertions) => dispatch(getAssertions(assertions)),
 });
 
-export default connect(null, mapDispatchToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
