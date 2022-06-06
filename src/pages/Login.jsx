@@ -101,10 +101,9 @@ class Login extends Component {
 
               <button
                 type="button"
-                disabled={ isDisabled }
                 onClick={ () => history.push('/settings') }
                 data-testid="btn-settings"
-                className="btn btn-primary"
+                className="btn btn-secondary"
               >
                 Settings
               </button>
