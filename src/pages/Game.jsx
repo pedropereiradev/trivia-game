@@ -40,7 +40,7 @@ class Game extends Component {
     const token = getToken();
     const questions = await fetchApiGame(token, settingsToApi);
 
-    if (questions.length > 0) {
+    if (questions && questions.length > 0) {
       this.setState({
         getQuestions: questions,
       }, () => {
