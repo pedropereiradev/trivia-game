@@ -50,9 +50,14 @@ class Settings extends Component {
   render() {
     const { categories, categorySelected, difficultySelected, typeSelected } = this.state;
     return (
-      <div>
-        <h1 data-testid="settings-title">Settings</h1>
-        <form>
+      <div className="bg-dark vh-100">
+        <h1
+          className="text-white pt-5"
+          data-testid="settings-title"
+        >
+          Settings
+        </h1>
+        <form className="container d-flex flex-column">
           <label htmlFor="categorySelected">
             Categoria:
             <select
@@ -60,6 +65,7 @@ class Settings extends Component {
               onChange={ this.handleChange }
               name="categorySelected"
               id="categorySelected"
+              className="form-select"
             >
               <option value="">Todas categorias</option>
               {categories.map(({ id, name }) => (
@@ -76,6 +82,7 @@ class Settings extends Component {
               onChange={ this.handleChange }
               name="difficultySelected"
               id="difficultySelected"
+              className="form-select"
             >
               <option value="">Qualquer dificuldade</option>
               <option value="easy">Fácil</option>
@@ -90,6 +97,7 @@ class Settings extends Component {
               onChange={ this.handleChange }
               name="typeSelected"
               id="typeSelected"
+              className="form-select mb-5"
             >
               <option value="">Qualquer Tipo</option>
               <option value="multiple">Múltipla escolha</option>
@@ -100,6 +108,7 @@ class Settings extends Component {
           <button
             type="submit"
             onClick={ this.handleSubmit }
+            className="btn btn-primary w-50 py-3 align-self-center"
           >
             Aplicar configurações
           </button>
