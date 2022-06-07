@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
+  getAssertions,
   saveScore, saveUserEmail, saveUserName,
   setTriviaSettingsCategory, setTriviaSettingsDifficulty, setTriviaSettingsType,
 } from '../redux/actions';
@@ -22,8 +23,11 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    const { clearScore, clearCategory, clearDifficulty, clearType } = this.props;
+    const {
+      clearScore, clearAssertions, clearCategory, clearDifficulty, clearType,
+    } = this.props;
 
+    clearAssertions();
     clearScore();
     clearCategory();
     clearDifficulty();
@@ -120,6 +124,7 @@ Login.propTypes = {
   setUserEmail: PropTypes.func.isRequired,
   setUserName: PropTypes.func.isRequired,
   clearScore: PropTypes.func.isRequired,
+  clearAssertions: PropTypes.func.isRequired,
   clearCategory: PropTypes.func.isRequired,
   clearDifficulty: PropTypes.func.isRequired,
   clearType: PropTypes.func.isRequired,
@@ -130,6 +135,7 @@ const mapDispatchToProps = (dispatch) => ({
   setUserEmail: (email) => dispatch(saveUserEmail(email)),
   setUserName: (name) => dispatch(saveUserName(name)),
   clearScore: (score = 0) => dispatch(saveScore(score)),
+  clearAssertions: (assertions = 0) => dispatch(getAssertions(assertions)),
   clearCategory: () => dispatch(setTriviaSettingsCategory('')),
   clearDifficulty: () => dispatch(setTriviaSettingsDifficulty('')),
   clearType: () => dispatch(setTriviaSettingsType('')),
