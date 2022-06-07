@@ -16,34 +16,38 @@ class Feedback extends Component {
     saveNewGame({ name, score, picture });
 
     return (
-      <div>
+      <div className="bg-dark text-white vh-100">
         <Header />
-        <h2 data-testid="feedback-text">
+        <h1
+          className="mb-5"
+          data-testid="feedback-text"
+        >
           {assertions >= MIN_ASSERTIONS ? 'Well Done!' : 'Could be better...'}
-        </h2>
+        </h1>
 
         <section>
-          <p>
+          <h2>
             Você acertou
             {' '}
             <span data-testid="feedback-total-question">{ assertions }</span>
             {' '}
             {assertions === 1 ? 'questão' : 'questões'}
             !
-          </p>
-          <h3>
+          </h2>
+          <h2>
             Um total de
             {' '}
             <span data-testid="feedback-total-score">{ score }</span>
             {' '}
             pontos
-          </h3>
+          </h2>
         </section>
-        <section>
+        <section className="d-grid gap-2 col-6 mx-auto mt-5">
           <button
             type="button"
             data-testid="btn-play-again"
             onClick={ () => history.push('/') }
+            className="btn btn-primary"
           >
             Play Again
           </button>
@@ -51,6 +55,7 @@ class Feedback extends Component {
             type="button"
             onClick={ () => history.push('/ranking') }
             data-testid="btn-ranking"
+            className="btn btn-secondary"
           >
             Ranking
           </button>
