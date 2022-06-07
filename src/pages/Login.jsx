@@ -49,7 +49,7 @@ class Login extends Component {
     }, () => this.validate());
   }
 
-  handleClick = async (event) => {
+  handleClick = async (event, route) => {
     event.preventDefault();
 
     const { history, setUserEmail, setUserName } = this.props;
@@ -61,12 +61,12 @@ class Login extends Component {
     setUserName(name);
     setUserEmail(email);
 
-    history.push('/game');
+    history.push(`/${route}`);
   }
 
   render() {
     const { name, email, isDisabled } = this.state;
-    const { history } = this.props;
+
     return (
       <div className="bg-dark vh-100">
         <section
@@ -96,7 +96,7 @@ class Login extends Component {
               <button
                 type="submit"
                 disabled={ isDisabled }
-                onClick={ this.handleClick }
+                onClick={ (event) => this.handleClick(event, 'game') }
                 data-testid="btn-play"
                 className="btn btn-primary px-4"
               >
@@ -104,8 +104,8 @@ class Login extends Component {
               </button>
 
               <button
-                type="button"
-                onClick={ () => history.push('/settings') }
+                type="submit"
+                onClick={ (event) => this.handleClick(event, 'settings') }
                 data-testid="btn-settings"
                 className="btn btn-secondary"
               >

@@ -139,7 +139,7 @@ class Game extends Component {
     if (counter === 0) clearInterval(this.intervalId);
 
     return (
-      <div className="bg-dark text-white vh-100">
+      <div className="bg-dark text-white min-vh-100">
         <Header />
         <h1
           className={ counter <= TIME_ENDING && 'text-danger' }
