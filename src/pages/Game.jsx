@@ -6,6 +6,8 @@ import { getAssertions, saveScore } from '../redux/actions';
 import { getToken, saveToken } from '../services/ranking';
 import { fetchApiGame } from '../services/triviaAPI';
 
+const he = require('he');
+
 class Game extends Component {
   constructor() {
     super();
@@ -133,6 +135,8 @@ class Game extends Component {
     const { getQuestions, position, correctBorder, incorrectBorder,
       isAnswered, counter, rightAnswer, shuffledArray } = this.state;
 
+    if (counter === 0) clearInterval(this.intervalId);
+
     return (
       <div>
         <Header />
@@ -147,7 +151,7 @@ class Game extends Component {
 
         <p data-testid="question-text">
           {getQuestions.length > 0
-          && getQuestions[position].question}
+          && he.decode(getQuestions[position].question)}
         </p>
 
         <section data-testid="answer-options">
@@ -163,7 +167,7 @@ class Game extends Component {
                     ? { border: correctBorder } : { border: incorrectBorder } }
                   disabled={ counter <= 0 }
                 >
-                  {questions}
+                  {he.decode(questions)}
                 </button>
               ))}
         </section>
