@@ -134,25 +134,31 @@ class Game extends Component {
   render() {
     const { getQuestions, position, correctBorder, incorrectBorder,
       isAnswered, counter, rightAnswer, shuffledArray } = this.state;
+    const TIME_ENDING = 5;
 
     if (counter === 0) clearInterval(this.intervalId);
 
     return (
-      <div>
+      <div className="bg-dark text-white vh-100">
         <Header />
-        <h1>
-          {`Timer ${counter} `}
+        <h1
+          className={ counter <= TIME_ENDING && 'text-danger' }
+        >
+          {`Timer: ${counter} `}
         </h1>
 
-        <p data-testid="question-category">
+        <p
+          className="mt-5"
+          data-testid="question-category"
+        >
           {getQuestions.length > 0
           && getQuestions[position].category}
         </p>
 
-        <p data-testid="question-text">
+        <h2 data-testid="question-text">
           {getQuestions.length > 0
           && he.decode(getQuestions[position].question)}
-        </p>
+        </h2>
 
         <section data-testid="answer-options">
           {shuffledArray.length > 0
@@ -166,18 +172,20 @@ class Game extends Component {
                   style={ questions === rightAnswer[position]
                     ? { border: correctBorder } : { border: incorrectBorder } }
                   disabled={ counter <= 0 }
+                  className="me-4 btn btn-success px-5 py-3 mt-5"
                 >
                   {he.decode(questions)}
                 </button>
               ))}
         </section>
 
-        {isAnswered
+        {(isAnswered || counter === 0)
         && (
           <button
             type="button"
             data-testid="btn-next"
             onClick={ this.handleClickNext }
+            className="btn btn-primary mt-5 px-5 py-3"
           >
             Next
           </button>
