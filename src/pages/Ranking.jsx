@@ -31,7 +31,7 @@ class Ranking extends Component {
             {ranking.length > 0 && (
               ranking.map((player, index) => (
                 <li
-                  className="mx-3 mb-3 w-100 d-flex align-items-center
+                  className="mb-3 mx-3 w-100 d-flex align-items-center
                   border-bottom border-white border-opacity-10 pb-3"
                   key={ index }
                 >
