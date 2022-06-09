@@ -99,15 +99,14 @@ class Game extends Component {
   handleClickOption = ({ target }) => {
     clearInterval(this.intervalId);
 
-    const { getQuestions, counter, score } = this.state;
+    const { getQuestions, counter, score, position } = this.state;
     const { setUserScore } = this.props;
 
+    const actualQuestion = getQuestions[position];
     const question = target.innerHTML;
-    const findQuestion = getQuestions
-      .find((quest) => quest.correct_answer === question);
 
-    if (findQuestion !== undefined) {
-      const getDifficulty = findQuestion.difficulty;
+    if (actualQuestion.correct_answer === question) {
+      const getDifficulty = actualQuestion.difficulty;
       const TEN = 10;
       const totalScore = score + TEN + (counter * this.multDifficulty(getDifficulty));
 
