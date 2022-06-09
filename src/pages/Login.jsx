@@ -7,7 +7,7 @@ import {
   setTriviaSettingsCategory, setTriviaSettingsDifficulty, setTriviaSettingsType,
 } from '../redux/actions';
 import { fetchApiPlayer } from '../services/triviaAPI';
-import { saveToken } from '../services/ranking';
+import { saveToken, getToken } from '../services/ranking';
 
 import logo from '../trivia.png';
 
@@ -55,11 +55,17 @@ class Login extends Component {
     const { history, setUserEmail, setUserName } = this.props;
     const { email, name } = this.state;
 
-    const token = await fetchApiPlayer();
+     const haveToken = getToken();
 
-    saveToken(token);
+    if (!haveToken) {
+      const token = await fetchApiPlayer();
+
+      saveToken(token);
+    }
+
     setUserName(name);
     setUserEmail(email);
+
 
     history.push(`/${route}`);
   }
